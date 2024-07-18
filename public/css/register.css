@@ -1,0 +1,62 @@
+body{
+background: url('/img/register.jpg');
+background-color: black;
+background-position: center  ;
+background-size: cover;
+background-repeat: no-repeat;
+font-family: 'Righteous','sans-serif';
+
+}
+@media(max-width:987px){
+    body{
+        background-size: 
+    }
+}
+.content-wrapper{
+    height: 100vh;
+    width: 100%;
+    display: flex;
+    align-items: center;
+}
+
+.container{
+    background-color: white;
+    border: 1.6px solid black;
+    outline: 1.2px solid white;    text-align: center;
+    /* position:absolute;
+    top:20%;
+    left:30%; */
+    min-height: 64%;
+    gap: 2em;
+    /* height: fit-content; */
+    width: 55%;
+    border: 1.5px solid black;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0,0,0,.5);
+}
+@media(max-width:900px){
+    .container{
+        width: 80%;
+
+    }
+}
+
+form{
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    gap: 2.5em;
+}
+
+.form-control{
+    border: 1px solid grey;
+    text-align: center;
+}
+
+.input-container{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+}
+

@@ -1,0 +1,67 @@
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="/css/navbar.css">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Permanent+Marker&family=Righteous&family=Rubik+Glitch+Pop&family=Titillium+Web:ital,wght@0,200;0,300;0,400;0,600;0,700;0,900;1,200;1,300;1,400;1,600;1,700&display=swap" rel="stylesheet">
+
+<nav class="navbar navbar-dark navbar-expand-lg  sticky-top " style="background-color: black;">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="/" style="font-family: Permanent Marker,sans-serif">WorkoutWave</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse justify-content-center" id="navbarNavDropdown"  style="font-family: Permanent Marker,sans-serif">
+        <ul class="navbar-nav me-auto">
+          <!-- Empty ul to take up space on the left -->
+        </ul>
+        
+        <ul class="navbar-nav mx-auto " >
+          <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="/">Home</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/features">Features</a>
+          </li>
+
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              View Exercises
+            </a>
+            <ul class="dropdown-menu" style="font-family: Righteous,sans-serif;">
+              <li><a class="dropdown-item" href="/exercise/back">Back</a></li>
+              <li><a class="dropdown-item" href="/exercise/cardio">Cardio</a></li>
+              <li><a class="dropdown-item" href="/exercise/chest">Chest</a></li>
+              <li><a class="dropdown-item" href="/exercise/lower%20arms">Lower Arms</a></li>
+              <li><a class="dropdown-item" href="/exercise/upper%20arms">Upper Arms</a></li>
+              <li><a class="dropdown-item" href="/exercise/lower%20legs">Lower Legs</a></li>
+              <li><a class="dropdown-item" href="/exercise/upper%20legs">Upper Legs</a></li>
+              <li><a class="dropdown-item" href="/exercise/neck">Neck</a></li>
+              <li><a class="dropdown-item" href="/exercise/shoulders">Shoulders</a></li>
+              <li><a class="dropdown-item" href="/exercise/waist">Abs</a></li>
+            </ul>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/contact">Contact</a>
+          </li>
+
+        </ul>
+        
+        <ul class="navbar-nav ms-auto">
+          <% if(user){ %>
+          <li class="nav-item">
+            <a class="nav-link " aria-current="page" href="/dashboard">Dashboard</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link " aria-current="page" href="/logout">Logout</a>
+          </li>
+          <% }else{ %>
+            <li class="nav-item">
+              <a class="nav-link" href="/register">Register</a>
+            </li>
+            <li class="nav-item me-auto">
+              <a class="nav-link" href="/login">Login</a>
+            </li>
+          <% } %>
+        </ul>
+      </div>
+    </div>
+  </nav>

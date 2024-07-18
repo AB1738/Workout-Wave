@@ -1,0 +1,253 @@
+h1{
+    text-align: center;
+}
+.workout{
+    border: 2px solid black;
+    text-align: center;
+    background-color: #FAF9F6;
+    color: black;
+    /* margin-bottom: 5px; */
+}
+.workout-container{
+ border: 3.5px solid black;
+ outline: 2px solid white;
+ border-radius: 5px;
+}
+
+.workout:hover{
+    box-shadow: 0 0 36px rgba(0, 0, 0, 0.5);
+  background-color: white;
+}
+.trash{
+    color: red;
+    border-radius: 100%;
+    padding: 20px;
+    z-index: 1;
+}
+.trash:hover{
+    box-shadow: 0 0 24px rgba(0, 0, 0, 0.5);
+    cursor: pointer;
+}
+
+.tooltipclass {
+    position: relative;
+    display: inline-block;
+    cursor: pointer;
+  }
+  
+  /* Tooltip text */
+  .tooltipclass .tooltiptext {
+    visibility: hidden;
+    /* width: 120px; */
+    font-size:10px;
+    background-color: black;
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 5px 0;
+    position: absolute;
+    z-index: 1;
+    bottom: 125%; /* Position above the tooltip container */
+    left: 50%;
+    margin-left: -60px; /* Center the tooltip text */
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+  
+  /* Tooltip arrow */
+  .tooltipclass .tooltiptext::after {
+    content: "";
+    position: absolute;
+    top: 100%; /* At the bottom of the tooltip */
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: black transparent transparent transparent;
+  }
+  
+  /* Show the tooltip text when hovering over the tooltip container */
+  .tooltipclass:hover .tooltiptext {
+    visibility: visible;
+    opacity: 1;
+  }
+
+  .id  {
+    display: none;
+  }
+
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+body{
+    background-color: black;
+    width: 100%;
+    height: 100%;
+
+}
+a{
+    text-decoration: none;
+}
+
+.workout-history-container{
+display: flex;
+position: relative;
+width: 100%;
+min-height: 100vh;
+height: fit-content; /* Full viewport height */
+}
+
+.sidebar{
+    background-color: black;
+    border-top: 1px solid grey;
+    border-bottom: 1px solid grey;
+    border-right: 2px solid grey;
+    height: 100dvh;
+    width: 18%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 2.5em;
+    position:  sticky ;
+    text-align: center;
+    transition: width 0.3s;
+    top: 20px;
+    color: white;
+}
+.sidebar-btn{
+    color: white;
+    font-size:95%;
+    width: 100%;
+    height: 100%;
+}
+
+/*  */
+@media(max-width:1272px){
+  .sidebar-btn{
+      font-size: 13px;
+  }
+}
+@media(max-width:1108px){
+  .sidebar-btn{
+      font-size: 12px;
+  }
+}
+.sidebar-item:hover{
+    box-shadow: 0 0 24px rgba(255, 255, 255, 0.5);
+
+}
+.sidebar-btn-icon{
+    display: none;
+}
+
+
+
+.workout-history-wrapper{
+    width: 82%;
+    text-align: center;
+    /* background-color: white; */
+    border-bottom: 1px solid grey;
+    color: white;
+    flex-grow: 1;
+    padding: 20px;
+    background-image: url('/img/workoutHistory.jpg');
+}
+.sidebar-item{
+    background-color: black;
+    width: 100%;
+    height: 50px;
+    border: 1px solid white;
+    border-radius: 5px;
+    padding: 5px;
+
+}
+
+
+#menu-toggle{
+    height: 45px;
+    width: 50px;
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    }
+        .sidebar.collapsed #menu-toggle{
+        width: 100%;
+    }
+   
+    .sidebar.collapsed {
+        width: 5%;
+        min-width: 60px;
+        justify-content: center;
+        
+        gap: 2.5em;
+    }
+    .sidebar.collapsed .sidebar-btn {
+        display: none;
+    }
+    .sidebar.collapsed .sidebar-item {
+        border: none;
+        background-color: black;
+        border: 1px solid white;
+        display: flex;
+        justify-content: center;
+        height: fit-content;
+    }
+    .sidebar.collapsed .sidebar-btn-icon {
+        display: block;
+        color: white;
+        font-size: 20px;
+    }
+
+    .sidebar-text {
+        opacity: 1; /* Make text visible */
+        transition: opacity 0.3s ease; /* Transition properties */
+        visibility: visible; /* Ensure text is visible */
+    }
+    
+    .sidebar.collapsed .sidebar-text {
+        opacity: 0; /* Start with text invisible */
+        transition: opacity 0.3s ease; /* Transition properties */
+    }
+
+
+    .sidebar + .workout-history-wrapper {
+        transition: width 0.3s;
+    }
+
+
+@media(max-width:800px){
+    .sidebar{
+        width: 18%;
+        min-width: 60px;
+        justify-content: center;
+        gap: 2.5em;
+    }
+    .sidebar-btn{
+        display: none;
+    }
+    .sidebar-item{
+        border: none;
+        background-color: black;
+        border: 1px solid white;
+        display: flex;
+        justify-content: center;
+        height: fit-content;
+    }
+    
+    .sidebar-btn-icon{
+        display: block;
+        color: white;
+        font-size: 20px;
+    }
+  
+    #menu-toggle{
+        display: none;
+    }
+}
+.chart-container{
+    display: flex;
+    justify-content: center;
+}

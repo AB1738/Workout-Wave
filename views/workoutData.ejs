@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/moment@2.29.1"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-moment"></script>
+    <script src="https://kit.fontawesome.com/556c7ff2e0.js" crossorigin="anonymous"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Permanent+Marker&family=Righteous&family=Rubik+Glitch+Pop&family=Titillium+Web:ital,wght@0,200;0,300;0,400;0,600;0,700;0,900;1,200;1,300;1,400;1,600;1,700&display=swap" rel="stylesheet">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22256%22 height=%22256%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 rx=%2220%22 fill=%22%23000000%22></rect><path fill=%22%23ffffff%22 d=%22M15.83 71.90L15.83 71.90Q15.47 71.09 15.10 70.36Q14.73 69.63 14.37 69.04L14.37 69.04Q13.49 67.29 12.83 65.89Q12.17 64.50 11.58 62.67L11.58 62.67Q11.80 61.43 12.35 58.50Q12.90 55.57 13.64 52.09Q14.37 48.61 15.21 45.02Q16.05 41.43 16.93 38.87L16.93 38.87Q17.74 36.60 18.73 34.03Q19.71 31.47 20.92 29.31Q22.13 27.15 23.52 25.61Q24.91 24.07 26.53 23.78L26.53 23.78Q26.97 24.37 27.48 24.69Q27.99 25.02 28.43 25.17L28.43 25.17Q29.68 26.93 30.85 28.14Q32.02 29.35 33.63 30.52L33.63 30.52Q33.19 32.71 32.35 35.39Q31.51 38.06 30.59 40.77Q29.68 43.48 28.80 46.01Q27.92 48.54 27.40 50.37L27.40 50.37Q26.97 51.83 26.53 53.74L26.53 53.74Q26.16 55.35 25.76 57.62Q25.35 59.89 24.99 62.60L24.99 62.60Q26.01 62.30 27.29 61.43Q28.58 60.55 29.68 59.59L29.68 59.59Q30.99 58.50 32.24 57.25L32.24 57.25Q33.92 55.57 35.10 54.17Q36.27 52.78 37.26 51.28Q38.24 49.78 39.31 47.99Q40.37 46.19 41.83 43.70L41.83 43.70Q43.15 41.58 44.58 39.16Q46.01 36.74 47.47 34.55Q48.94 32.35 50.33 30.48Q51.72 28.61 52.89 27.59L52.89 27.59Q53.70 28.39 54.76 29.27Q55.82 30.15 57.07 30.52L57.07 30.52Q57.58 31.32 58.06 31.95Q58.53 32.57 58.97 33.15L58.97 33.15Q59.56 33.96 60.03 34.62Q60.51 35.28 60.88 36.08L60.88 36.08Q60.80 36.67 60.62 37.62Q60.44 38.57 60.22 39.71Q60.00 40.84 59.74 42.02Q59.48 43.19 59.27 44.29L59.27 44.29Q58.53 47.58 58.17 49.27Q57.80 50.95 57.65 51.90Q57.51 52.86 57.47 53.52Q57.43 54.17 57.43 55.35L57.43 55.35Q57.43 56.23 57.58 57.10L57.58 57.10Q57.73 57.91 57.91 58.75Q58.09 59.59 58.61 60.33L58.61 60.33L62.12 57.62Q63.59 56.52 64.94 54.50Q66.30 52.49 67.58 49.89Q68.86 47.29 70.10 44.25Q71.35 41.21 72.60 37.99L72.60 37.99Q73.47 35.64 74.39 33.34Q75.31 31.03 76.26 28.94Q77.21 26.86 78.13 25.13Q79.04 23.41 79.92 22.24L79.92 22.24Q81.90 23.49 83.33 24.73Q84.75 25.98 85.82 27.48Q86.88 28.98 87.50 30.92Q88.12 32.86 88.42 35.50L88.42 35.50Q86.80 38.57 85.41 41.80Q84.02 45.02 82.63 48.32L82.63 48.32Q80.87 52.56 79.00 56.77Q77.14 60.99 74.87 64.79Q72.60 68.60 69.78 71.79Q66.96 74.98 63.29 77.17L63.29 77.17Q62.27 76.95 61.54 76.95L61.54 76.95Q60.73 76.95 60.18 77.17Q59.63 77.39 59.19 77.76L59.19 77.76Q56.19 76.37 54.36 73.62Q52.53 70.87 50.77 67.50L50.77 67.50Q50.55 66.99 50.29 66.52Q50.04 66.04 49.74 65.53L49.74 65.53L48.50 63.26L47.77 61.87L46.74 62.82L45.20 64.21L44.32 65.09Q42.05 67.21 39.71 69.23Q37.37 71.24 34.80 72.89Q32.24 74.54 29.35 75.56Q26.45 76.59 23.16 76.66L23.16 76.66Q22.57 76.37 22.09 76.15Q21.62 75.93 21.18 75.71L21.18 75.71Q19.49 74.90 18.40 74.17Q17.30 73.44 15.83 71.90Z%22></path></svg>" />
+    <link rel="stylesheet" href="/css/workoutData.css">
+    <title>
+        <%= 
+        (filteredCardioWorkouts.length < 1 && filteredWorkouts.length < 1) ? 
+        'Exercise Data' :
+        ((filteredCardioWorkouts.length < 1) ?
+            (toTitleCase(filteredWorkouts[0].exercise) + ' Data') :
+            (toTitleCase(filteredCardioWorkouts[0].exercise) + ' Data')) %>
+    </title>
+    
+</head>
+<body>
+
+    <%-include('./partials/navbar')  %>
+
+    <div class="workout-data-container">
+
+        <div class="sidebar" data-bs-toggle="collapse" data-bs-target id="sidebar" style="font-family: Permanent Marker,sans-serif;">
+          <button class="btn btn-dark" id="menu-toggle"><i class="fa-solid fa-bars"></i></button>
+
+          <a href="/dashboard">
+            <section class="sidebar-item">
+              <button class="btn btn-alert sidebar-btn"><i class="fa-solid fa-house"> </i> Dashboard</button>
+              <button class="btn btn-alert sidebar-btn-icon">
+                <i class="fa-solid fa-house"></i>
+              </button>
+            </section>
+          </a>
+
+            <a href="/dashboard/workout">
+              <section class="sidebar-item">
+                <button class="btn btn-alert sidebar-btn"><i class="fa-solid fa-dumbbell"></i> <span class="sidebar-text">Log your workouts</span> </button>
+                <button class="btn btn-alert sidebar-btn-icon">
+                  <i class="fa-solid fa-dumbbell"></i>
+                </button>
+              </section>
+            </a>
+            <a href="/dashboard/goals">
+        <section class="sidebar-item">
+                <button class="btn btn-alert sidebar-btn"><i class="fa-solid fa-bullseye"></i><span class="sidebar-text"> My Goals</span> </button>
+                <button class="btn btn-alert sidebar-btn-icon">
+                  <i class="fa-solid fa-bullseye"></i>
+                </button>   
+        </section>
+      </a>
+      <a href="/dashboard/schedule">
+        <section class="sidebar-item">
+                <button class="btn btn-alert sidebar-btn"><i class="fa-regular fa-calendar"></i> <span class="sidebar-text">My Schedule</span></button>
+                <button class="btn btn-alert sidebar-btn-icon">
+                  <i class="fa-regular fa-calendar"></i>
+                </button>
+
+            
+        </section>
+      </a>
+        <a href="/dashboard/favoriteExercises">
+        <section class="sidebar-item">
+                <button class="btn btn-alert sidebar-btn"><i class="fa-solid fa-heart"></i><span class="sidebar-text"> My Favorite Exercises</span> </button>
+                <button class="btn btn-alert sidebar-btn-icon">
+                  <i class="fa-solid fa-heart"></i>
+                </button>
+
+            
+        </section>
+      </a>
+        <a href="/dashboard/workoutHistory">
+        <section class="sidebar-item">
+            
+                <button class="btn btn-alert sidebar-btn"><i class="fa-solid fa-table"></i> <span class="sidebar-text">View Workout History</span></button>
+                <button class="btn btn-alert sidebar-btn-icon">
+                  <i class="fa-solid fa-table"></i>
+                </button>
+
+            
+        </section>
+      </a>
+        <a href="/profile">
+        <section class="sidebar-item">
+            
+                <button class="btn btn-alert sidebar-btn"><i class="fa-solid fa-user"></i> <span class="sidebar-text">User Profile</span></button>
+                <button class="btn btn-alert sidebar-btn-icon">
+                  <i class="fa-solid fa-user"></i>
+                </button>
+
+            
+        </section>
+      </a>
+        </div>
+        <script>
+
+          document.getElementById('menu-toggle').addEventListener('click', function(e) {
+              e.preventDefault();
+              document.getElementById('sidebar').classList.toggle('collapsed');
+
+          });
+   
+      </script>
+        <div class="workout-data" style="font-family: Righteous,sans-serif;">
+
+    <% if((filteredCardioWorkouts.length<1 &&filteredWorkouts.length<1)){ %>
+        
+        <h1 style="color: white;">There is no user data for this exercise</h1>
+
+    <% }else {%>
+        <% if(filteredCardioWorkouts.length<1) {%>
+            <h1 class="exercise-chart-header"><%= toTitleCase( filteredWorkouts[0].exercise)%> Data</h1>
+            <div class="chart">
+                <h4>Total reps and sets completed over time</h4>
+                <canvas id="myChart"></canvas>
+            </div>
+            <div class="chart">
+                <h4>Weight progression per reps</h4>
+                <canvas id="myChart2"></canvas>
+            </div>
+            <div class="chart2">
+
+            
+                <h4>Reps per Set Over Time</h4>
+                <canvas id="myChart3"></canvas>
+            </div>
+            
+
+
+
+        <% } else if(filteredWorkouts.length<1){%>
+            <h1 class="exercise-chart-header"><%= toTitleCase( filteredCardioWorkouts[0].exercise)%> Data </h1>
+            
+            <div class="chart">
+                <h4>Duration of Workout Over Time</h4>
+                <canvas id="myChart4"></canvas>
+            </div>
+            <div class="chart">
+                <h4>Distance Traveled Over Time</h4>
+                <canvas id="myChart5"></canvas>
+            </div>
+            <div class="chart">
+                <h4>Reps per Set Over Time</h4>
+                <canvas id="myChart6"></canvas>
+            </div>
+
+
+
+        <% } %>
+    <% } %>
+        </div>
+
+    </div>
+
+
+    
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const filteredWorkouts = <%- JSON.stringify(filteredWorkouts) %>;
+
+            const workoutDates = filteredWorkouts.map(workout => moment.utc(workout.date).format('YYYY-MM-DD'));
+
+// Aggregate total reps and sets for each workout
+const totalRepsData = filteredWorkouts.map(workout => {
+    const sets = Array.isArray(workout.sets) ? workout.sets.length : workout.sets;
+    const reps = Array.isArray(workout.reps) ? workout.reps.reduce((a, b) => a + b, 0) : workout.reps * sets;
+    return reps;
+});
+
+const totalSetsData = filteredWorkouts.map(workout => {
+    return Array.isArray(workout.sets) ? workout.sets.length : workout.sets;
+});
+
+// Configure the chart
+const data = {
+    labels: workoutDates,
+    datasets: [
+        {
+            label: 'Total Reps',
+            data: totalRepsData,
+            borderColor: 'rgb(75, 192, 192)',
+            fill: false,
+        },
+        {
+            label: 'Total Sets',
+            data: totalSetsData,
+            borderColor: 'rgb(255, 99, 132)',
+            fill: false,
+        }
+    ]
+};
+
+const config = {
+    type: 'line',
+    data: data,
+    options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins:{
+            tooltip:{
+                callbacks:{
+                    title: context => {
+                        const d = moment.utc(context[0].parsed.x).local();
+                        const formattedDate = d.format('MMM D');
+                        return formattedDate;
+                    }
+                }
+            }
+        },
+        scales: {
+            x: {
+                type: 'time',
+                time: {
+                    unit: 'day',
+                    tooltipFormat: 'MMM D',
+                },
+                title: {
+                    display: true,
+                    text: 'Date'
+                }
+            },
+            y: {
+                title: {
+                    display: true,
+                    text: 'Total Count'
+                }
+            }
+        }
+    }
+};
+    // const workoutDates = filteredWorkouts.map(workout => workout.date);
+
+// Extract weight and reps data for each workout
+const weightData = filteredWorkouts.map(workout => workout.weight || 0); // Handle missing weight values
+const totalRepsData2 = filteredWorkouts.map(workout => {
+    const sets = Array.isArray(workout.sets) ? workout.sets.length : workout.sets;
+    const reps = Array.isArray(workout.reps) ? workout.reps.reduce((a, b) => a + b, 0) : workout.reps * sets;
+    return reps;
+});
+
+// console.log("Weight Data:", weightData);
+// console.log("Total Reps Data:", totalRepsData2);
+
+// Configure the chart
+const data2 = {
+    labels: workoutDates,
+    datasets: [
+        {
+            label: 'Weight',
+            data: weightData,
+            borderColor: 'rgb(75, 192, 192)',
+            fill: false,
+            yAxisID: 'y1',
+        },
+        {
+            label: 'Total Reps',
+            data: totalRepsData2,
+            borderColor: 'rgb(255, 99, 132)',
+            fill: false,
+            yAxisID: 'y2',
+        }
+    ]
+};
+
+const config2 = {
+    type: 'line',
+    data: data2,
+    options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins:{
+                tooltip:{
+                    callbacks:{
+                        title:context=>{
+                            const d=new Date(context[0].parsed.x)
+                            const formattedDate=d.toLocaleString([],{
+                                month:'short',
+                                day:'numeric'
+                            })
+                            return formattedDate
+                        }
+                    }
+                }
+            },
+        scales: {
+            x: {
+                type: 'time',
+                time: {
+                    unit: 'day'
+                },
+                title: {
+                    display: true,
+                    text: 'Date'
+                }
+            },
+            y1: {
+                title: {
+                    display: true,
+                    text: 'Weight (lbs)'
+                },
+                position: 'left',
+                grid: {
+                    drawOnChartArea: false
+                }
+            },
+            y2: {
+                title: {
+                    display: true,
+                    text: 'Total Reps'
+                },
+                position: 'right',
+                grid: {
+                    drawOnChartArea: false
+                }
+            }
+        }
+    }
+};
+
+    // Prepare data for Chart.js
+
+    // Ensure sets and reps are arrays
+    const setsData = filteredWorkouts.map(workout => Array.isArray(workout.sets) ? workout.sets : new Array(workout.sets).fill(workout.sets));
+    const repsData = filteredWorkouts.map(workout => Array.isArray(workout.reps) ? workout.reps : new Array(workout.sets).fill(workout.reps));
+
+    // console.log("Sets Data:", setsData);
+    // console.log("Reps Data:", repsData);
+
+    // Assume each workout has the same number of sets for simplicity
+    const setsCount = Math.max(...filteredWorkouts.map(workout => workout.reps.length));
+
+    // console.log("Sets Count:", setsCount);
+
+    // Prepare dataset for each set
+    const datasets = [];
+
+for (let i = 0; i < setsCount; i++) {
+    const setData = filteredWorkouts.map(workout => workout.reps[i] || 0);
+    datasets.push({
+        label: `Set ${i + 1}`,
+        data: setData,
+        borderColor: `rgb(${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)})`,
+        fill: false,
+    });
+}
+
+    // console.log("Datasets:", datasets);
+
+    // Configure the chart
+    const data3 = {
+        labels: workoutDates,
+        datasets: datasets
+    };
+
+    const config3 = {
+        type: 'line',
+        data: data3,
+        options: {
+            responsive: true,
+        maintainAspectRatio: false,
+            plugins:{
+                tooltip:{
+                    callbacks:{
+                        title:context=>{
+                            // console.log(context)
+                            const d=new Date(context[0].parsed.x)
+                            const formattedDate=d.toLocaleString([],{
+                                month:'short',
+                                day:'numeric'
+                            })
+                            return formattedDate
+                        }
+                    }
+                }
+            },
+            scales: {
+                x: {
+                    type: 'time',
+                    time: {
+                        unit: 'day'
+                    },
+                    title: {
+                        display: true,
+                        text: 'Date'
+                    }
+                },
+                y: {
+                    title: {
+                        display: true,
+                        text: 'Reps'
+                    }
+                }
+            }
+        }
+    };
+
+    // Render the chart
+    const myChart = new Chart(
+        document.getElementById('myChart'),
+        config
+    );
+
+
+// Render the chart
+const myChart2 = new Chart(
+    document.getElementById('myChart2'),
+    config2
+);
+
+    // Render the chart
+    const myChart3 = new Chart(
+        document.getElementById('myChart3'),
+        config3
+    );
+});
+
+    </script>
+
+    <script>
+               const filteredCardioWorkouts = <%- JSON.stringify(filteredCardioWorkouts) %>;
+
+// Extract dates and durations
+const workoutDates = filteredCardioWorkouts.map(workout => workout.date);
+const durations = filteredCardioWorkouts.map(workout => workout.duration);
+const distance = filteredCardioWorkouts.map(workout => workout.distance);
+
+// Prepare data for Chart.js
+const data = {
+    labels: workoutDates,
+    datasets: [
+        {
+            label: 'Workout Duration (mins)',
+            data: durations,
+            borderColor: 'rgb(75, 192, 192)',
+            fill: false,
+        }
+    ]
+};
+
+// Configure the chart
+const config = {
+    type: 'line',
+    data: data,
+    options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+            tooltip: {
+                callbacks: {
+                    title: context => {
+                        const d = moment.utc(context[0].parsed.x).format('MMM D');
+                        return d;
+                    }
+                }
+            }
+        },
+        scales: {
+            x: {
+                type: 'time',
+                time: {
+                    unit: 'day'
+                },
+                title: {
+                    display: true,
+                    text: 'Date'
+                }
+            },
+            y: {
+                title: {
+                    display: true,
+                    text: 'Duration (mins)'
+                }
+            }
+        }
+    }
+};
+
+// Create the chart
+const ctx = document.getElementById('myChart4').getContext('2d');
+const durationChart = new Chart(ctx, config);
+// Prepare data for Chart.js
+const data2 = {
+    labels: workoutDates,
+    datasets: [
+        {
+            label: 'Workout Distance (miles)',
+            data: distance,
+            borderColor: 'rgb(75, 192, 192)',
+            fill: false,
+        }
+    ]
+};
+
+// Configure the chart
+const config2 = {
+    type: 'line',
+    data: data2,
+    options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+            tooltip: {
+                callbacks: {
+                    title: context => {
+                        const d = moment.utc(context[0].parsed.x).format('MMM D');
+                        return d;
+                    }
+                }
+            }
+        },
+        scales: {
+            x: {
+                type: 'time',
+                time: {
+                    unit: 'day'
+                },
+                title: {
+                    display: true,
+                    text: 'Date'
+                }
+            },
+            y: {
+                title: {
+                    display: true,
+                    text: 'Distance (miles)'
+                }
+            }
+        }
+    }
+};
+
+
+
+// Create the chart
+const ct = document.getElementById('myChart5').getContext('2d');
+const distanceChart = new Chart(ct, config2);
+        
+
+  // Ensure sets and reps are arrays
+  const setsData = filteredCardioWorkouts.map(workout => Array.isArray(workout.sets) ? workout.sets : new Array(workout.sets).fill(workout.sets));
+    const repsData = filteredCardioWorkouts.map(workout => Array.isArray(workout.reps) ? workout.reps : new Array(workout.sets).fill(workout.reps));
+
+    // console.log("Sets Data:", setsData);
+    // console.log("Reps Data:", repsData);
+
+    // Assume each workout has the same number of sets for simplicity
+    const setsCount = Math.max(...filteredCardioWorkouts.map(workout => workout.reps.length));
+
+    // console.log("Sets Count:", setsCount);
+
+    // Prepare dataset for each set
+    const datasets = [];
+
+for (let i = 0; i < setsCount; i++) {
+    const setData = filteredCardioWorkouts.map(workout => workout.reps[i] || 0);
+    datasets.push({
+        label: `Set ${i + 1}`,
+        data: setData,
+        borderColor: `rgb(${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)})`,
+        fill: false,
+    });
+}
+
+    // console.log("Datasets:", datasets);
+
+    // Configure the chart
+    const data3 = {
+        labels: workoutDates,
+        datasets: datasets
+    };
+
+    const config3 = {
+        type: 'line',
+        data: data3,
+        options: {
+            responsive: true,
+        maintainAspectRatio: false,
+            plugins:{
+                tooltip:{
+                    callbacks:{
+                        title:context=>{
+                            // console.log(context)
+                            const d=new Date(context[0].parsed.x)
+                            const formattedDate=d.toLocaleString([],{
+                                month:'short',
+                                day:'numeric'
+                            })
+                            return formattedDate
+                        }
+                    }
+                }
+            },
+            scales: {
+                x: {
+                    type: 'time',
+                    time: {
+                        unit: 'day'
+                    },
+                    title: {
+                        display: true,
+                        text: 'Date'
+                    }
+                },
+                y: {
+                    title: {
+                        display: true,
+                        text: 'Reps'
+                    }
+                }
+            }
+        }
+    };
+
+    // Render the chart
+//     const c = document.getElementById('myChart6').getContext('2d');
+// const setsAndRepsChart = new Chart(c, config3);
+
+const myChart6 = new Chart(
+    document.getElementById('myChart6'),
+    config3
+);
+
+
+    </script>
+
+
+
+
+    
+</body>
+</html>

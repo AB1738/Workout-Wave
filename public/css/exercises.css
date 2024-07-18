@@ -1,0 +1,120 @@
+body{
+background: url('/img/exercise.jpg');
+background-color: black;
+}
+.body-part{
+  color: white;
+  
+}
+
+.container{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    text-align: center;
+}
+.container h1{
+    text-align: center;
+    display: block;
+    width: 100%;
+}
+.exercise-container{
+    width: 40%;
+    border: 3.5px solid black;
+    outline: 3.5px solid white;
+    margin: 8px;
+    border-radius: 5px;
+    background-color: white;
+}
+.exercise-container:hover{
+    box-shadow: 0 0 48px rgba(0, 0, 0, 1);
+    border: 5px solid black;
+    outline: 5px solid white;
+    
+}
+.exercise-container ul{
+    display: inline-block;
+}
+.exercise-container ul li{
+    list-style: circle;
+}
+
+.exercise-img{
+    max-width: 80%;
+    max-height: 80%;
+}
+
+.instructions{
+    line-height: 2.5rem;
+
+}
+
+@media(max-width:700px){
+    .exercise-container{
+        width: 90%;
+    }
+}
+
+.heart {
+    color: grey;  
+    font-size: 30px;
+    cursor: pointer;
+  }
+  
+  .heart.red {
+    color: red;
+  }
+
+  /* .heart:hover{
+    color: rgb(250, 67, 67);;
+  } */
+
+
+/* Basic tooltip container */
+.tooltipclass {
+  position: relative;
+  display: inline-block;
+  cursor: pointer;
+}
+
+/* Tooltip text */
+.tooltipclass .tooltiptext {
+  visibility: hidden;
+  /* width: 120px; */
+  font-size:10px;
+  background-color: black;
+  color: #fff;
+  text-align: center;
+  border-radius: 6px;
+  padding: 5px 0;
+  position: absolute;
+  z-index: 1;
+  bottom: 125%; /* Position above the tooltip container */
+  left: 50%;
+  margin-left: -60px; /* Center the tooltip text */
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+/* Tooltip arrow */
+.tooltipclass .tooltiptext::after {
+  content: "";
+  position: absolute;
+  top: 100%; /* At the bottom of the tooltip */
+  left: 50%;
+  margin-left: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: black transparent transparent transparent;
+}
+
+/* Show the tooltip text when hovering over the tooltip container */
+.tooltipclass:hover .tooltiptext {
+  visibility: visible;
+  opacity: 1;
+}
+
+
+.id{
+    display: none;
+}

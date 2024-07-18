@@ -1,0 +1,9 @@
+/* Default border style for the navbar */
+.navbar {
+    border-bottom: 1px solid grey;
+}
+
+/* Remove border for pages with the no-border class */
+.no-border .navbar {
+    border-bottom: none;
+}

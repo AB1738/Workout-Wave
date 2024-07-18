@@ -1,0 +1,269 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+body{
+    background-color: black;
+    width: 100%;
+    height: 100%;
+
+}
+a{
+    text-decoration: none;
+}
+
+.dashboard-container{
+display: flex;
+position: relative;
+border-bottom: 1px solid grey;
+color: white;
+width: 100%;
+min-height: 100vh;
+height: fit-content; /* Full viewport height */
+}
+
+.sidebar{
+    background-color: black;
+    border-top: 1px solid grey;
+    border-bottom: 1px solid grey;
+    border-right: 2px solid grey;
+    height: 100dvh;
+    width: 18%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 2.5em;
+    position:  sticky ;
+    text-align: center;
+    transition: width 0.4s;
+    top: 20px;
+    color: white;
+}
+.sidebar-btn{
+    color: white;
+    font-size:95%;
+    width: 100%;
+    height: 100%;
+}
+
+/*  */
+@media(max-width:1272px){
+    .sidebar-btn{
+        font-size: 13px;
+    }
+}
+@media(max-width:1108px){
+    .sidebar-btn{
+        font-size: 12px;
+    }
+}
+
+
+
+
+.sidebar-item:hover{
+    box-shadow: 0 0 24px rgba(255, 255, 255, 0.5);
+
+}
+.sidebar-btn-icon{
+    display: none;
+}
+
+
+
+.dashboard{
+    width: 82%;
+    text-align: center;
+    background-color: black;
+    flex-grow: 1;
+    padding: 20px;
+}
+.sidebar-item{
+    background-color: black;
+    width: 100%;
+    height: 50px;
+    border: 1px solid white;
+    border-radius: 5px;
+    padding: 5px;
+
+}
+
+
+#menu-toggle{
+    height: 45px;
+    width: 50px;
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    }
+        .sidebar.collapsed #menu-toggle{
+        width: 100%;
+    }
+   
+    .sidebar.collapsed {
+        width: 5%;
+        min-width: 60px;
+        justify-content: center;
+        
+        gap: 2.5em;
+    }
+    .sidebar.collapsed .sidebar-btn {
+        /* height: 0;
+        width: 0;
+        font-size: 0;
+        visibility: hidden; */
+        display: none;
+
+    }
+
+    
+    .sidebar.collapsed .sidebar-item {
+        border: none;
+        background-color: black;
+        border: 1px solid white;
+        display: flex;
+        justify-content: center;
+        height: fit-content;
+    }
+    .sidebar.collapsed .sidebar-btn-icon {
+        display: block;
+        color: white;
+        font-size: 20px;
+    }
+
+   
+    
+    
+
+    .sidebar + .dashboard {
+        transition: width 0.4s;
+    }
+
+    #myChart{
+        height: 534px;
+    }
+    #timeSpentCardioChart{
+        max-height: 380px;
+        max-width: 300px;
+    }
+    #myDonutChart{
+        max-height: 380px;
+        max-width: 300px;
+    }
+
+    @media(max-width:1178px){
+        #timeSpentCardioChart{
+            max-height: 300px;
+            min-height: 180px;
+        }
+        #myDonutChart{
+            max-height: 300px;
+            min-height: 180px;
+        }
+        .chart-container.donut{
+            height: 300px;
+        }
+    }
+    @media(max-width:320px){
+        .chart-container.donut{
+            height: 270px;
+        }
+    }
+
+@media(max-width:800px){
+    .sidebar{
+        width: 18%;
+        min-width: 60px;
+        justify-content: center;
+        gap: 2.5em;
+    }
+    .sidebar-btn{
+        display: none;
+    }
+    .sidebar-item{
+        border: none;
+        background-color: black;
+        border: 1px solid white;
+        display: flex;
+        justify-content: center;
+        height: fit-content;
+    }
+    
+    .sidebar-btn-icon{
+        display: block;
+        color: white;
+        font-size: 20px;
+    }
+  
+    #menu-toggle{
+        display: none;
+    }
+}
+.chart-container{
+    display: flex;
+    justify-content: center;
+    border: 4px solid black;
+    outline: 4px solid white;
+    border-radius: 5px;
+    background-color: white;
+}
+
+
+.donut{
+    height: 100%;
+    width: 60%;
+    
+
+}
+.container{
+    gap: 2em;
+    margin-bottom: 2em;
+
+}
+
+@media(max-width:810px){
+    .container{
+        flex-wrap: wrap;
+    }
+    .donut{
+        width: 100%;
+    }
+}
+
+
+ .center-text {
+    position: absolute;
+    text-align: center;
+    padding-top: 30px;
+    color: rgb(255, 99, 132);
+    white-space: nowrap; /* Prevent text wrapping */
+}
+
+@media (max-width: 600px) {
+    .center-text {
+        font-size: 30px; /* Smaller font size for mobile */
+    }
+}
+@media(max-width:405px){
+    .donut{
+        height: 200px;
+    }
+    .center-text {
+        font-size: 20px; /* Smaller font size for mobile */
+    }
+}
+
+@media (min-width: 601px) {
+    .center-text {
+        font-size: 50px; /* Larger font size for desktop */
+    }
+}
+
+
+
+
+
+
+

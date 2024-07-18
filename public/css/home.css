@@ -1,0 +1,139 @@
+
+body{
+    background-color: black;
+
+    background: hsla(0, 0%, 0%, 1);
+    background: linear-gradient(90deg, hsla(201, 94%, 14%, 1) 0%, hsla(0, 0%, 0%, 1) 100%);
+    background: -moz-linear-gradient(90deg, hsla(201, 94%, 14%, 1) 0%, hsla(0, 0%, 0%, 1) 100%);
+    background: -webkit-linear-gradient(90deg, hsla(201, 94%, 14%, 1) 0%, hsla(0, 0%, 0%, 1) 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#022D45", endColorstr="#000000", GradientType=1);    
+    font-family: 'Righteous',sans-serif;
+    color: white;
+}
+
+/* Edge-specific adjustments */
+@supports (-ms-ime-align: auto) {
+    /* CSS rules specific to Edge */
+    body {
+        /* Example Edge-specific styles */
+      background-color: black;
+    }
+}
+h2{
+    margin-top: 10px;
+    text-align: center;
+}
+.exercise-img-container{
+    height: 700px;
+    width: 1200px;
+    background-color: green;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    margin: 0 auto;
+}
+.img-container{
+    height: 20%;
+    width: 20%;
+    text-align: center;
+}
+.img-container a{
+    text-decoration: none;
+    color: white;
+}
+
+.workout-img{
+    max-width: 95%; /* Set the maximum width to 100% of its container */
+  max-height: 95%; /* Set the maximum height to 100% of its container */
+  width: auto; /* Ensure the width adjusts automatically to maintain aspect ratio */
+  height: auto; /* Ensure the height adjusts automatically to maintain aspect ratio */
+    border: 2px solid black;
+    border-radius: 30px;
+    margin-right: 5px;
+}
+.workout-img:hover{
+    border: 5px solid white;
+}
+
+.img-container:hover{
+    text-shadow: 8px 8px 12px rgba(0,0,0,5);
+}
+
+.header{
+    text-align: center;
+    color: white;
+}
+.content-container{
+    min-width: fit-content;
+    min-height: 100vh;
+    width: 100%;
+    /* background-color: black; */
+    /* background-image: url('/img/home1.png');
+    background-size: cover; */
+    background: hsla(0, 0%, 0%, 1);
+    background: linear-gradient(90deg, hsla(201, 94%, 14%, 1) 0%, hsla(0, 0%, 0%, 1) 100%);
+    background: -moz-linear-gradient(90deg, hsla(201, 94%, 14%, 1) 0%, hsla(0, 0%, 0%, 1) 100%);
+    background: -webkit-linear-gradient(90deg, hsla(201, 94%, 14%, 1) 0%, hsla(0, 0%, 0%, 1) 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#022D45", endColorstr="#000000", GradientType=1);
+    
+
+}
+.carousel-inner {
+      width: 100%;
+      height: auto;
+    }
+
+    .carousel-item {
+  
+      width: 100%;
+    }
+
+    .carousel-item img {
+      width: 100%;
+      height: auto;
+      max-height: 680px; /* Adjust the max-height as needed */
+      object-fit: cover;
+    }
+
+
+
+    @media (max-width: 767px) {
+      .carousel-caption {
+        font-size: 14px;
+        bottom: 20px;
+      }
+    }
+
+    @media (min-width: 768px) {
+      .carousel-caption {
+        font-size: 18px;
+      }
+    }
+
+    .carousel {
+      width: 100%;
+      height: auto;
+    }
+    .carousel-caption {
+    display: block !important;
+  }
+
+.carousel-container{
+display: flex;
+justify-content: center;
+align-items: center;
+/* background-image: url('/img/home2.png'); */
+background-size: cover;
+/* background-color: green; */
+}
+.carousel-container h5{
+    color: white;
+    -webkit-text-stroke-width: 1px;
+  -webkit-text-stroke-color: black;
+}
+.carousel-container p{
+    color: white;
+    -webkit-text-stroke-width: .25px;
+  -webkit-text-stroke-color: black;
+}

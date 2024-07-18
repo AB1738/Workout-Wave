@@ -1,0 +1,42 @@
+body{
+    background-color: black;
+    font-family: 'Righteous',sans-serif;
+}
+
+.content-container{
+    height: 100vh;
+    width: 100%;
+    color:white;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border-bottom: 1px solid grey;
+}
+.content-wrapper  {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 1em;
+    min-width: fit-content;
+    min-height: fit-content;
+    text-align: center;
+}
+svg{
+ height: 200px;
+ width: 200px;
+}
+
+@media(max-width:350px){
+    svg{
+        height: 150px;
+        width: 150px;
+    }
+    h1 {
+        font-size: 1.5em;
+    }
+    p{
+        font-size: 14px;
+    }
+}
