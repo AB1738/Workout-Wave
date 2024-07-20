@@ -122,7 +122,7 @@ const downloadImage = async (url, dest) => {
 
 
 app.get('/',(req,res)=>{
-    res.render('home',{user:req.user,})
+    res.render('home',{user:req.user})
 })
 
 app.get('/exercise/:bodyPart',async(req,res)=>{
