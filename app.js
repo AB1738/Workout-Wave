@@ -15,6 +15,7 @@ const passport = require('passport');
 const crypto = require('crypto');
 const nodemailer = require('nodemailer');
 // const moment = require('moment')
+const flash = require('connect-flash');
 const moment = require('moment-timezone')
 const workouts = require('./models/workouts')
 const favoriteExercises = require('./models/favoriteExercises')
@@ -46,12 +47,19 @@ app.use(session({
   }))
 app.use(passport.initialize());
 app.use(passport.session());
+app.use(flash());
 
 
 
 passport.use(User.createStrategy());
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
+
+app.use((req,res,next)=>{
+    res.locals.success=req.flash('success')
+    res.locals.error=req.flash('error')
+    next()
+  })
 
 function isAuthenticated(req, res, next) {
     if (req.isAuthenticated()) {
@@ -285,6 +293,7 @@ app.get('/verify/:token', async (req, res) => {
         req.session.userEmail = null;
         await user.save();
 //registration completed flash message
+req.flash('success','Registration comlete')
         res.redirect('/login')
     } catch (error) {
         console.error('Error verifying token:', error);
@@ -349,7 +358,8 @@ app.post('/reset-password',async(req,res)=>{
         const {email}=req.body
         const user = await User.findOne({ email: email });
         if(user==null){
-           return res.send('email not found')  //make this a flash message
+            req.flash('error','Email not found')
+           return res.redirect('/forgot-password') 
         }
 
     if(user.isVerified==false){
@@ -435,7 +445,7 @@ app.post('/reset-password/:token',async(req,res)=>{
      user.passwordResetToken = undefined;
      user.passwordResetExpires = undefined;
      await user.save();
-     console.log('password has been reset') //make this a flash message
+     req.flash('success','Password has been reset') //make this a flash message
     console.log(password)
     res.redirect('/login')
 })
@@ -474,16 +484,15 @@ app.get('/login',(req,res)=>{
 
 
 
-app.post('/login', passport.authenticate('local',{ failureRedirect: '/login'}), (req, res) => {
-  // Successful authentication, redirect or respond as needed
-//   res.send(`Login successful! Welcome back ${req.user.name}`);
+app.post('/login', passport.authenticate('local',{ failureRedirect: '/login',failureFlash:true}), (req, res) => {
+    req.flash('success', `Welcome back ${req.user.name}`)
     res.redirect('/dashboard')
 });
 
 app.get('/logout',(req,res)=>{
     req.logout(function(err) {
         if (err) { return next(err); }
-        // req.flash('success', `Goodbye. See you soon!`)
+        req.flash('success', `Goodbye. See you soon!`)
         res.redirect('/');//redirects users to page they were on before they logged out
       });
 })
@@ -635,7 +644,7 @@ app.get('/workout/:workoutName',isAuthenticated,async(req,res)=>{
 
     }
     else{
-        console.log('exercise does not exist') //make this a flash message
+        req.flash('error','Exercise does not exist') //make this a flash message
         return res.redirect('/dashboard')
     }
 })
@@ -667,7 +676,7 @@ try{
             
                 user.workouts.push(workout._id)
                 await user.save()
-                
+                req.flash('success','Workout successfully logged')
             
                return res.redirect('/dashboard/workout')
     
@@ -681,7 +690,7 @@ try{
             user.workouts.push(workout._id)
             await user.save()
             
-        
+            req.flash('success','Workout successfully logged')
            return res.redirect('/dashboard/workout')
             
         }
@@ -709,6 +718,7 @@ app.delete('/dashboard/workoutHistory/:workoutId',isAuthenticated,async(req,res)
     const filteredWorkouts= user.workouts.filter((workout)=>workout.toString()!==workoutId.toString())
     user.workous=filteredWorkouts
     await user.save()
+    req.flash('success','Workout successfully deleted')
     res.status(200).json({ status: 'success'});
 })
 
@@ -726,8 +736,7 @@ app.post('/dashboard/schedule',isAuthenticated,async(req,res)=>{
     await workout.save()
     user.scheduledWorkouts.push(workout._id)
     await user.save()
-    // console.log(workout)
-    // console.log(user)
+    req.flash('success','Workout successfully scheduled')
     res.redirect('/dashboard/schedule')
 })
 
@@ -736,11 +745,12 @@ app.patch('/dashboard/update-schedule-event/:id', async (req, res) => {
         const {id}=req.params
         const {start}=req.body
         const workout= await ScheduledWorkout.findByIdAndUpdate(id,{start:start})
-        console.log(workout)
+    //     console.log(workout)
         
-        console.log('patch request successfully sent')
-        console.log(id)
-      console.log(start)
+    //     console.log('patch request successfully sent')
+    //     console.log(id)
+    //   console.log(start)
+      req.flash('success','Scheduled workout moved to new date')
       res.status(200).json({ status: 'success'});
     } catch (error) {
       console.error('Error updating schedule:', error);
@@ -752,23 +762,24 @@ app.delete('/dashboard/update-schedule-event/:id', async (req, res) => {
    try{
     const {id}=req.params
     const user=await User.findById(req.user.id)
-    console.log(id)
-    console.log('-----------------------------------------')
+    // console.log(id)
+    // console.log('-----------------------------------------')
     // console.log(req.user)
 
     // const workout= await ScheduledWorkout.findByIdAndDelete(id)
-    for(let w of user.scheduledWorkouts){
-        console.log(w.toString().slice(0, 24))
-    }
+    // for(let w of user.scheduledWorkouts){
+    //     console.log(w.toString().slice(0, 24))
+    // }
    const filteredWorkouts= user.scheduledWorkouts.filter((workout)=>workout.toString()!==id.toString())
-    console.log('-----------------------------------------')
+    // console.log('-----------------------------------------')
     user.scheduledWorkouts=filteredWorkouts
     const workout= await ScheduledWorkout.findByIdAndDelete(id)
     await user.save()
-    console.log(user.scheduledWorkouts )
+    // console.log(user.scheduledWorkouts )
     // console.log(workout)
     
-    console.log('delete request successfully sent')
+    // console.log('delete request successfully sent')
+    req.flash('success','Scheduled workout delete')
     res.status(200).json({ status: 'success'});
    }
    catch (error) {
@@ -797,9 +808,10 @@ app.delete('/dashboard/update-schedule-event/:id', async (req, res) => {
     user.goals.push(goals)
     await goals.save()
     await user.save()
-    console.log(user)
-    console.log('------------------------')
-    console.log(goals)
+    // console.log(user)
+    // console.log('------------------------')
+    // console.log(goals)
+    req.flash('success','Goal successfully saved')
     res.redirect('/dashboard/goals')
   })
 
@@ -807,6 +819,7 @@ app.delete('/dashboard/update-schedule-event/:id', async (req, res) => {
     const {goalsId}=req.params
     const goal= await Goals.findById(goalsId)
     goal.completed=!goal.completed
+    req.flash('success','Goal status changed ')
     await goal.save()
     res.status(200).json({ status: 'success'});
 
@@ -818,6 +831,7 @@ app.delete('/dashboard/update-schedule-event/:id', async (req, res) => {
     const filteredGoals= user.goals.filter((goals)=>goals.toString()!==goalsId.toString())
     const goal= await Goals.findByIdAndDelete(goalsId)
     user.goals=filteredGoals
+    req.flash('success','Workout successfully deleted')
     await user.save()
 
     res.status(200).json({ status: 'success'});
@@ -841,6 +855,7 @@ app.delete('/dashboard/update-schedule-event/:id', async (req, res) => {
     user.favoriteExercises.push(favoriteExercise)
     await favoriteExercise.save()
     await user.save()
+    req.flash('success','Exercise saved')
     res.status(200).json({ status: 'success'});
   })
 
@@ -851,6 +866,7 @@ app.delete('/dashboard/update-schedule-event/:id', async (req, res) => {
     const filteredFavoriteExercises= user.favoriteExercises.filter((favExercise)=>favExercise.toString()!==favoriteExercise._id.toString())
     user.favoriteExercises=filteredFavoriteExercises
     await user.save()
+    req.flash('success','Exercise deleted')
     res.status(200).json({ status: 'success'});
   })
 
@@ -871,27 +887,22 @@ app.delete('/dashboard/update-schedule-event/:id', async (req, res) => {
     res.render('contact-success',{user:req.user})
   })
 
-  app.get('/test',(req,res)=>{
-    res.render('test')
-  })
 
   app.patch('/update-name',isAuthenticated,async (req,res)=>{
     const {name}=req.body
     const user=await User.findById(req.user.id)
     user.name=name
     await user.save()
+    req.flash('success','Name successfully updated')
     res.status(200).json({ status: 'success'});
   })
 
-//   app.patch('/update-email',async(req,res)=>{
-//     console.log('route hit')
-//     res.send('route hit')
-//   })
   app.patch('/update-dob',isAuthenticated,async(req,res)=>{
     const {dob}=req.body
     const user=await User.findById(req.user.id)
     user.dateOfBirth=dob
     await user.save()
+    req.flash('success','Date Of Birth successfully updated')
     res.status(200).json({ status: 'success'});
   })
 
@@ -901,28 +912,3 @@ app.listen(PORT,()=>{
     console.log(`listening on port ${PORT}`)
 })
 
-
-
-/*
-{
-"bodyPart": "chest",
-"equipment": "body weight",
-"gifUrl": "https://v2.exercisedb.io/image/Bi8xVYeWIyqo56",
-"id": "3294",
-"name": "archer push up",
-"target": "pectorals",
-"secondaryMuscles": [
-"triceps",
-"shoulders",
-"core"
-],
-"instructions": [
-"Start in a push-up position with your hands slightly wider than shoulder-width apart.",
-"Extend one arm straight out to the side, parallel to the ground.",
-"Lower your body by bending your elbows, keeping your back straight and core engaged.",
-"Push back up to the starting position.",
-"Repeat on the other side, extending the opposite arm out to the side.",
-"Continue alternating sides for the desired number of repetitions."
-]
-},
-*/

@@ -1,7 +1,10 @@
 body{
     font-family: 'Righteous',sans-serif;
+    height: 100%;
     background-color: black;
+    color: white;
 }
+
 .features-container{
     min-height: 100vh;
     width: 100%;
@@ -24,7 +27,7 @@ body{
 
 }   
 
-.feature-description{
+/* .feature-description{
     height: 100%;
     width: 65%;
     border: 1px solid red;
@@ -46,4 +49,50 @@ body{
 .feature-img-container img{
     height: 100%;
     width: 100%;
-}
+} */
+
+.carousel-inner {
+    width: 100%;
+    height: auto;
+  }
+
+  .carousel-item {
+
+    width: 100%;
+  }
+
+  .carousel-item img {
+    width: 100%;
+    height: auto;
+    max-height: 350px; /* Adjust the max-height as needed */
+    object-fit: contain;
+  }
+
+
+
+  .carousel {
+    width: auto;
+    height: auto;
+  }
+
+  .join-btn{
+    background-color: white;
+    color: black;
+  }
+  .join-btn:hover{
+    background-color: #c040c0;
+    transition: background-color .4s ease;
+    color:white;
+  }
+  .join-start-btn{
+    background-color: white;
+    color :black;
+  }
+
+  .join-start-btn:hover{
+    /* background-color: white;
+    color :black; */
+    background-color: #4cb4f6;
+    transition: background-color .4s ease;
+    color: white;
+  }
