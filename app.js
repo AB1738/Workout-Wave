@@ -61,6 +61,7 @@ app.use((req,res,next)=>{
     next()
   })
 
+
 function isAuthenticated(req, res, next) {
     if (req.isAuthenticated()) {
       return next();
@@ -77,27 +78,6 @@ function isAuthenticated(req, res, next) {
 
 
 
-const downloadImage = async (url, dest) => {
-    try {
-        const response = await axios({
-            url,
-            method: 'GET',
-            responseType: 'stream'
-        });
-
-        const writer = fs.createWriteStream(dest);
-
-        response.data.pipe(writer);
-
-        return new Promise((resolve, reject) => {
-            writer.on('finish', resolve);
-            writer.on('error', reject);
-        });
-    } catch (error) {
-        fs.unlink(dest, () => {}); // Clean up if error occurs
-        throw error;
-    }
-};
   
   const fetchBodyPartExercises=async(bodyPart)=>  {
     try {
@@ -117,23 +97,19 @@ const downloadImage = async (url, dest) => {
     }
   }
 
-//   app.get('/test',async(req,res)=>{
-//     const exercises=await Exercise.find()
-//     let names=[]
-//     for(e of exercises){
-//         names
-//     }
-//     res.send(exercises)
-//   })
 
 
 
 
-app.get('/',(req,res)=>{
+app.get('/',(req,res,next)=>{    
+    try{
     res.render('home',{user:req.user})
+    }catch(e){
+        next(e)
+    }
 })
 
-app.get('/exercise/:bodyPart',async(req,res)=>{
+app.get('/exercise/:bodyPart',async(req,res,next)=>{
     try {
         const {bodyPart}=req.params
         const exercises =await fetchBodyPartExercises(bodyPart);
@@ -147,12 +123,12 @@ app.get('/exercise/:bodyPart',async(req,res)=>{
 
 
     } catch (error) {
-        console.error(error);
+        next(error);
     }
   
 })
 
-app.get('/exercises/:bodyPart',async(req,res)=>{
+app.get('/exercises/:bodyPart',async(req,res,next)=>{
     try{
         if(req.session.exercises&&req.session.bodypart==req.params.bodyPart){
             const exercises=req.session.exercises
@@ -192,16 +168,22 @@ app.get('/exercises/:bodyPart',async(req,res)=>{
       
     // res.render('exercises',{exercises,bodyPart})
     }catch(e){
-        console.log(e)
+        next(e)
     }
 })
 
 
-app.get('/register',async(req,res)=>{
+
+
+app.get('/register',async(req,res,next)=>{
+    try{
     if(req.user){
         return res.redirect('/dashboard')
     }
     res.render('register',{user:req.user})
+}catch(e){
+    next(e)
+}
 })
 
 app.post('/register', async (req, res) => {
@@ -259,18 +241,19 @@ app.post('/register', async (req, res) => {
         res.status(500).send('Error registering user');
     }
 });
-app.get('/register/verification',ensureRegisteredButNotVerified,async(req,res)=>{
+app.get('/register/verification',ensureRegisteredButNotVerified,async(req,res,next)=>{
+    try{
     const email=req.session.userEmail
     const user = await User.findOne({ email: email});
     const token=user.verificationToken
     req.session.userEmail=null
     res.render('verification',({user:req.user,email}))
+    }catch(e){
+        next(e)
+    }
 })
 
-// app.get('/test',(req,res)=>{
-//     const email='testing@123.com'
-//     res.render('verification',({user:req.user,email}))
-// })
+
 
 // Verification route
 app.get('/verify/:token', async (req, res) => {
@@ -293,7 +276,7 @@ app.get('/verify/:token', async (req, res) => {
         req.session.userEmail = null;
         await user.save();
 //registration completed flash message
-req.flash('success','Registration comlete')
+req.flash('success','Registration complete')
         res.redirect('/login')
     } catch (error) {
         console.error('Error verifying token:', error);
@@ -349,11 +332,15 @@ app.get('/verification-email/:email',async (req,res)=>{
 
 })
 
-app.get('/forgot-password',async(req,res)=>{
+app.get('/forgot-password',async(req,res,next)=>{
+    try{
     res.render('forgotPassword',({user:req.user}))
+    }catch(e){
+        next(e)
+    }
 })
 
-app.post('/reset-password',async(req,res)=>{
+app.post('/reset-password',async(req,res,next)=>{
     try{
         const {email}=req.body
         const user = await User.findOne({ email: email });
@@ -409,12 +396,13 @@ app.post('/reset-password',async(req,res)=>{
     
         // res.send(user)
     }catch(e){
-        console.log(e)
+        next(e)
     }
 
 })
 
 app.get('/reset-password/:token',async(req,res,next)=>{
+    try{
 const user = await User.findOne({ 
             passwordResetToken: req.params.token, 
             passwordResetExpires: { $gt: Date.now() } 
@@ -429,10 +417,14 @@ const user = await User.findOne({
     else{
         next()
     }
+}catch(e){
+    next(e)
+}
     
 })
 
-app.post('/reset-password/:token',async(req,res)=>{
+app.post('/reset-password/:token',async(req,res,next)=>{
+    try{
     const {password}=req.body
     const user = await User.findOne({ 
         passwordResetToken: req.params.token, 
@@ -446,15 +438,22 @@ app.post('/reset-password/:token',async(req,res)=>{
      user.passwordResetExpires = undefined;
      await user.save();
      req.flash('success','Password has been reset') //make this a flash message
-    console.log(password)
     res.redirect('/login')
+}catch(e){
+    next(e)
+}
 })
 
-app.get('/password-reset',isAuthenticated,async(req,res)=>{
+app.get('/password-reset',isAuthenticated,async(req,res,next)=>{
+    try{
     const user=req.user
     res.render('loggedInPasswordReset',{user})
+    }catch(e){
+        next(e)
+    }
 })
-app.post('/password-reset',isAuthenticated,async(req,res)=>{
+app.post('/password-reset',isAuthenticated,async(req,res,next)=>{
+    try{
     const {email,password}=req.body
     const user=await User.findOne({email:email})
     if(user==null){
@@ -465,6 +464,9 @@ app.post('/password-reset',isAuthenticated,async(req,res)=>{
     console.log('password has been reset')
    console.log(password)
    res.redirect('/login')
+}catch(e){
+    next(e)
+}
 })
 
 
@@ -473,38 +475,55 @@ app.post('/password-reset',isAuthenticated,async(req,res)=>{
 
 
 
-app.get('/login',(req,res)=>{
+app.get('/login',(req,res,next)=>{
+    try{
     if(req.user){
        return res.redirect('/dashboard')
     }
     else{
         res.render('login',{user:req.user})
+    }}
+    catch(e){
+        next(e)
     }
 })
 
 
 
-app.post('/login', passport.authenticate('local',{ failureRedirect: '/login',failureFlash:true}), (req, res) => {
+app.post('/login', passport.authenticate('local',{ failureRedirect: '/login',failureFlash:true}), (req, res,next) => {
+    try{
     req.flash('success', `Welcome back ${req.user.name}`)
     res.redirect('/dashboard')
+    }catch(e){
+        next(e)
+    }
 });
 
-app.get('/logout',(req,res)=>{
+app.get('/logout',(req,res,next)=>{
+    try{
     req.logout(function(err) {
         if (err) { return next(err); }
         req.flash('success', `Goodbye. See you soon!`)
         res.redirect('/');//redirects users to page they were on before they logged out
       });
+    }catch(e){
+        next(e)
+    }
 })
 
 
 
-app.get('/profile',isAuthenticated,(req,res)=>{
+app.get('/profile',isAuthenticated,(req,res,next)=>{
+    try{
     const {name,dateOfBirth,email}=req.user
     res.render('profile',{name,dateOfBirth,email,user:req.user,toTitleCase,moment})
+    }catch(e){
+        next(e)
+    }
 })
 
-app.get('/dashboard',isAuthenticated,async(req,res)=>{
+app.get('/dashboard',isAuthenticated,async(req,res,next)=>{
+    try{
     const currentUser=await User.findById(req.user.id).populate('workouts')
     const workouts=currentUser.workouts
     let arr=[]
@@ -616,9 +635,13 @@ console.log('Data for chart:', data);
     // console.log(data)
 
     res.render('dashboard',{user:req.user,toTitleCase,data,updatedBodyPartLabels,bodyPartData,minsOfCardio})
+}catch(e){
+    next(e)
+}
 })
 
-app.get('/workout/:workoutName',isAuthenticated,async(req,res)=>{
+app.get('/workout/:workoutName',isAuthenticated,async(req,res,next)=>{
+    try{
     // const{workoutName}=req.params
     const workoutName = decodeURIComponent(req.params.workoutName);
     const exercise=await Exercise.find({name:workoutName})
@@ -647,14 +670,21 @@ app.get('/workout/:workoutName',isAuthenticated,async(req,res)=>{
         req.flash('error','Exercise does not exist') //make this a flash message
         return res.redirect('/dashboard')
     }
+    }catch(e){
+        next(e)
+    }
 })
 
 
-app.get('/dashboard/workout',isAuthenticated,async(req,res)=>{
+app.get('/dashboard/workout',isAuthenticated,async(req,res,next)=>{
+    try{
     const exercises=await Exercise.find()
     res.render('workout',{user:req.user,toTitleCase,exercises})
+    }catch(e){
+        next(e)
+    }
 })
-app.post('/workout',isAuthenticated,async(req,res)=>{
+app.post('/workout',isAuthenticated,async(req,res,next)=>{
     const {date,exercise,sets,reps,weight,duration,distance}=req.body
     const results=await Exercise.findOne({name:exercise})
     console.log(req.body)
@@ -700,18 +730,21 @@ try{
         return res.status(404).send('Exercise not found');
     }
 }catch(e){
-    console.error(e);
-    return res.status(500).send('Server error');
+    next(e);
 }
  
 })
-app.get('/dashboard/workoutHistory',isAuthenticated,async(req,res)=>{
+app.get('/dashboard/workoutHistory',isAuthenticated,async(req,res,next)=>{
+    try{
     const user=await User.findById(req.user.id).populate('workouts')
-    // console.log(user)
     res.render('workoutHistory',{user,toTitleCase,moment})
+    }catch(e){
+        next(e)
+    }
 })
 
-app.delete('/dashboard/workoutHistory/:workoutId',isAuthenticated,async(req,res)=>{
+app.delete('/dashboard/workoutHistory/:workoutId',isAuthenticated,async(req,res,next)=>{
+    try{
     const {workoutId}=req.params
     const user=await User.findById(req.user.id)
     const workout=await Workout.findByIdAndDelete(workoutId)
@@ -720,17 +753,25 @@ app.delete('/dashboard/workoutHistory/:workoutId',isAuthenticated,async(req,res)
     await user.save()
     req.flash('success','Workout successfully deleted')
     res.status(200).json({ status: 'success'});
+    }catch(e){
+        next(e)
+    }
 })
 
-app.get('/dashboard/schedule',isAuthenticated,async(req,res)=>{
+app.get('/dashboard/schedule',isAuthenticated,async(req,res,next)=>{
+    try{
     const user=await User.findById(req.user.id).populate('scheduledWorkouts');
 //     for(let workouts of user.scheduledWorkouts){
 //         console.log(workouts.start)
 //     }
 //    console.log('BEFORE HTML RENDERING')
     res.render('schedule',{user,moment})
+    }catch(e){
+        next(e)
+    }
 })
-app.post('/dashboard/schedule',isAuthenticated,async(req,res)=>{
+app.post('/dashboard/schedule',isAuthenticated,async(req,res,next)=>{
+    try{
     const workout=new ScheduledWorkout({...req.body})
     const user=await User.findById(req.user.id)
     await workout.save()
@@ -738,6 +779,9 @@ app.post('/dashboard/schedule',isAuthenticated,async(req,res)=>{
     await user.save()
     req.flash('success','Workout successfully scheduled')
     res.redirect('/dashboard/schedule')
+    }catch(e){
+        next(e)
+    }
 })
 
 app.patch('/dashboard/update-schedule-event/:id', async (req, res) => {
@@ -779,7 +823,7 @@ app.delete('/dashboard/update-schedule-event/:id', async (req, res) => {
     // console.log(workout)
     
     // console.log('delete request successfully sent')
-    req.flash('success','Scheduled workout delete')
+    req.flash('success','Scheduled workout deleted')
     res.status(200).json({ status: 'success'});
    }
    catch (error) {
@@ -790,11 +834,16 @@ app.delete('/dashboard/update-schedule-event/:id', async (req, res) => {
 
   });
 
-  app.get('/dashboard/goals',isAuthenticated,async(req,res)=>{
+  app.get('/dashboard/goals',isAuthenticated,async(req,res,next)=>{
+    try{
     const user=await User.findById(req.user.id).populate('goals');
     res.render('goals',{user,toTitleCase})
+    }catch(e){
+        next(e)
+    }
   })
-  app.post('/dashboard/goals',isAuthenticated,async (req,res)=>{
+  app.post('/dashboard/goals',isAuthenticated,async (req,res,next)=>{
+    try{
     const user=await User.findById(req.user.id)
     let{completed}=req.body
     const{title,description,target_date,completed_date}=req.body
@@ -813,98 +862,157 @@ app.delete('/dashboard/update-schedule-event/:id', async (req, res) => {
     // console.log(goals)
     req.flash('success','Goal successfully saved')
     res.redirect('/dashboard/goals')
+    }catch(e){
+        next(e)
+    }
   })
 
-  app.patch('/dashboard/goals/:goalsId',isAuthenticated,async(req,res)=>{
+  app.patch('/dashboard/goals/:goalsId',isAuthenticated,async(req,res,next)=>{
+    try{
     const {goalsId}=req.params
     const goal= await Goals.findById(goalsId)
     goal.completed=!goal.completed
     req.flash('success','Goal status changed ')
     await goal.save()
     res.status(200).json({ status: 'success'});
-
+    }catch(e){
+        next(e)
+    }
 
   })
-  app.delete('/dashboard/goals/:goalsId',isAuthenticated,async(req,res)=>{
+  app.delete('/dashboard/goals/:goalsId',isAuthenticated,async(req,res,next)=>{
+    try{
     const {goalsId}=req.params
     const user=await User.findById(req.user.id)
     const filteredGoals= user.goals.filter((goals)=>goals.toString()!==goalsId.toString())
     const goal= await Goals.findByIdAndDelete(goalsId)
     user.goals=filteredGoals
-    req.flash('success','Workout successfully deleted')
+    req.flash('success','Goal successfully deleted')
     await user.save()
 
     res.status(200).json({ status: 'success'});
-
+    }catch(e){
+        next(e)
+    }
 
 
   })
 
-  app.get('/dashboard/favoriteExercises',isAuthenticated,async(req,res)=>{
+  app.get('/dashboard/favoriteExercises',isAuthenticated,async(req,res,next)=>{
+    try{
     const user=await User.findById(req.user.id).populate('favoriteExercises');
     const favoriteExercises=user.favoriteExercises
     res.render('favoriteExercises',{user:req.user,favoriteExercises,toTitleCase})
+    }catch(e){
+        next(e)
+    }
   
   })
  
 
-  app.post('/dashboard/favoriteExercises',isAuthenticated,async(req,res)=>{
+  app.post('/dashboard/favoriteExercises',isAuthenticated,async(req,res,next)=>{
+    try{
     console.log('post request sent')
     const user=await User.findById(req.user.id)
     const favoriteExercise=new FavoriteExercises({...req.body})
     user.favoriteExercises.push(favoriteExercise)
     await favoriteExercise.save()
     await user.save()
-    req.flash('success','Exercise saved')
     res.status(200).json({ status: 'success'});
+    }catch(e){
+        next(e)
+    }
   })
 
-  app.delete('/dashboard/favoriteExercises/:exerciseID',isAuthenticated,async(req,res)=>{
+  app.delete('/dashboard/favoriteExercises/:exerciseID',isAuthenticated,async(req,res,next)=>{
+    try{
     const {exerciseID}=req.params
     const favoriteExercise=await FavoriteExercises.findOneAndDelete({id:exerciseID})
     const user=await User.findById(req.user.id)
     const filteredFavoriteExercises= user.favoriteExercises.filter((favExercise)=>favExercise.toString()!==favoriteExercise._id.toString())
     user.favoriteExercises=filteredFavoriteExercises
     await user.save()
-    req.flash('success','Exercise deleted')
     res.status(200).json({ status: 'success'});
+    }catch(e){
+        next(e)
+    }
   })
 
-  app.get('/features',(req,res)=>{
+  app.get('/features',(req,res,next)=>{
+    try{
     res.render('features',{user:req.user})
+    }catch(e){
+        next(e)
+    }
   })
 
-  app.get('/contact',(req,res)=>{
+  app.get('/contact',(req,res,next)=>{
+    try{
     const web3Key=process.env.WEB3_API_KEY
     res.render('contact',{user:req.user,web3Key})
+    }catch(e){
+        next(e)
+    }
   })
-  app.post('/https://api.web3forms.com/submit',(req,res)=>{
-    
+  app.post('/https://api.web3forms.com/submit',(req,res,next)=>{
+    try{
     res.redirect('/success')
+    }catch(e){
+        next(e)
+    }
   })
 
-  app.get('/success',(req,res)=>{
+  app.get('/success',(req,res,next)=>{
+    try{
     res.render('contact-success',{user:req.user})
+    }catch(e){
+        next(e)
+    }
   })
 
 
-  app.patch('/update-name',isAuthenticated,async (req,res)=>{
+  app.patch('/update-name',isAuthenticated,async (req,res,next)=>{
+    try{
     const {name}=req.body
     const user=await User.findById(req.user.id)
     user.name=name
     await user.save()
     req.flash('success','Name successfully updated')
     res.status(200).json({ status: 'success'});
+    }catch(e){
+        next(e)
+    }
   })
 
-  app.patch('/update-dob',isAuthenticated,async(req,res)=>{
+  app.patch('/update-dob',isAuthenticated,async(req,res,next)=>{
+    try{
     const {dob}=req.body
     const user=await User.findById(req.user.id)
     user.dateOfBirth=dob
     await user.save()
     req.flash('success','Date Of Birth successfully updated')
     res.status(200).json({ status: 'success'});
+    }catch(e){
+        next(e)
+    }
   })
+
+
+
+
+
+app.use((req, res, next) => {
+    res.status(404).render('404', { user: req.user });
+});
+
+// General error handling middleware
+app.use((err, req, res, next) => {
+     console.error(err.stack); // Log the error stack
+    const status = err.status || 500;
+    const message = status === 500 ? 'Internal Server Error' : err.message;
+    res.status(status).render('error', { user: req.user,message });
+});
+
 
 
 
