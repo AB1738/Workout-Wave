@@ -16,6 +16,7 @@ const crypto = require('crypto');
 const nodemailer = require('nodemailer');
 // const moment = require('moment')
 const flash = require('connect-flash');
+const sanitizeHtml = require('sanitize-html');
 const moment = require('moment-timezone')
 const workouts = require('./models/workouts')
 const favoriteExercises = require('./models/favoriteExercises')
@@ -97,6 +98,22 @@ function isAuthenticated(req, res, next) {
     }
   }
 
+  function sanitizeObject(obj) {
+    if (typeof obj === 'string') {
+      return sanitizeHtml(obj);
+    } else if (Array.isArray(obj)) {
+      return obj.map(sanitizeObject);
+    } else if (obj !== null && typeof obj === 'object') {
+      const sanitizedObj = {};
+      for (const key in obj) {
+        if (obj.hasOwnProperty(key)) {
+          sanitizedObj[key] = sanitizeObject(obj[key]);
+        }
+      }
+      return sanitizedObj;
+    }
+    return obj; // If not a string, array, or object, return as is
+  }
 
 
 
@@ -188,10 +205,16 @@ app.get('/register',async(req,res,next)=>{
 
 app.post('/register', async (req, res) => {
     const { name, dateOfBirth, email, password } = req.body;
+    const sanitizedName = sanitizeHtml(name)
+    const sanitizedEmail = sanitizeHtml(email, {
+        allowedTags: [],
+        allowedAttributes: {},
+      });
+
 
     try {
         // Create a new user instance
-        const user = new User({ name, dateOfBirth, email });
+        const user = new User({ sanitizedName, dateOfBirth, sanitizedEmail });
 
         // Register the user with passport-local-mongoose
         const newUser = await User.register(user, password);
@@ -560,7 +583,7 @@ const updatedBodyPartLabels = bodyPartLabels.map(label =>
   const timezoneOffset = startOfWeek.getTimezoneOffset() * 60000; // Timezone offset in milliseconds
   const startOfWeekAdjusted = new Date(startOfWeek.getTime() - timezoneOffset);
   
-  console.log('Start of week:', startOfWeekAdjusted);
+//   console.log('Start of week:', startOfWeekAdjusted);
   
 
 //   console.log('Start of the week:', startOfWeek);
@@ -587,7 +610,7 @@ const filteredWorkouts = user.workouts.filter(workout => {
     return workoutDate >= startOfWeekAdjusted && workoutDate < new Date(startOfWeekAdjusted.getTime() + 7 * 24 * 60 * 60 * 1000);
 });
 
-console.log('Filtered workouts:', filteredWorkouts);
+// console.log('Filtered workouts:', filteredWorkouts);
 
 // Aggregate workouts by day of the week
 const workoutsByDay = filteredWorkouts.reduce((acc, workout) => {
@@ -599,7 +622,7 @@ const workoutsByDay = filteredWorkouts.reduce((acc, workout) => {
     return acc;
 }, {});
 
-console.log('Workouts by day:', workoutsByDay);
+// console.log('Workouts by day:', workoutsByDay);
 
 const data = Array(7).fill(0);
 
@@ -609,7 +632,7 @@ for (let i = 0; i < 7; i++) {
     data[i] = workoutsByDay[index] || 0;
 }
 
-console.log('Data for chart:', data);
+// console.log('Data for chart:', data);
   
 
 //   console.log('Workouts by day:', workoutsByDay);
@@ -772,7 +795,8 @@ app.get('/dashboard/schedule',isAuthenticated,async(req,res,next)=>{
 })
 app.post('/dashboard/schedule',isAuthenticated,async(req,res,next)=>{
     try{
-    const workout=new ScheduledWorkout({...req.body})
+    const sanitizedBody = sanitizeObject(req.body);
+    const workout=new ScheduledWorkout({...sanitizedBody})
     const user=await User.findById(req.user.id)
     await workout.save()
     user.scheduledWorkouts.push(workout._id)
@@ -853,7 +877,14 @@ app.delete('/dashboard/update-schedule-event/:id', async (req, res) => {
     else if(completed==='on'){
         completed='true'
     }
-    const goals=new Goals({title,description,completed})
+    const sanitizedTitle = sanitizeHtml(title)
+    console.log(title)
+    console.log(sanitizedTitle)
+    const sanitizedDescription = sanitizeHtml(description)
+    console.log(description)
+    console.log('SANITIZED BELOW')
+    console.log(sanitizedDescription)
+    const goals=new Goals({sanitizedTitle,sanitizedDescription,completed})
     user.goals.push(goals)
     await goals.save()
     await user.save()
@@ -974,8 +1005,9 @@ app.delete('/dashboard/update-schedule-event/:id', async (req, res) => {
   app.patch('/update-name',isAuthenticated,async (req,res,next)=>{
     try{
     const {name}=req.body
+    const sanitizedName = sanitizeHtml(name)
     const user=await User.findById(req.user.id)
-    user.name=name
+    user.name=sanitizedName
     await user.save()
     req.flash('success','Name successfully updated')
     res.status(200).json({ status: 'success'});
