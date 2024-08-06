@@ -17,14 +17,21 @@ const nodemailer = require('nodemailer');
 // const moment = require('moment')
 const flash = require('connect-flash');
 const sanitizeHtml = require('sanitize-html');
+const mongoSanitize = require('express-mongo-sanitize');
+const helmet =require('helmet')
+
 const moment = require('moment-timezone')
 const workouts = require('./models/workouts')
 const favoriteExercises = require('./models/favoriteExercises')
 const Exercise = require('./models/exercises');
 require('dotenv').config()  
+const dbUrl=process.env.DB_URL
 const PORT=3000
 const toTitleCase = str => str.replace(/(^\w|\s\w)(\S*)/g, (_,m1,m2) => m1.toUpperCase()+m2.toLowerCase())
-mongoose.connect('mongodb://127.0.0.1:27017/workoutWave')
+//'mongodb://127.0.0.1:27017/workoutWave'
+
+const MongoStore = require('connect-mongo');
+mongoose.connect(dbUrl)
     .then(()=>{
          console.log("Connection Open!!")
         })
@@ -34,6 +41,27 @@ mongoose.connect('mongodb://127.0.0.1:27017/workoutWave')
         })
 
 
+const store=new MongoStore({
+  mongoUrl:dbUrl,
+  secret:process.env.MONGO_STORE_SECRET,
+  touchAfter:24*60*60
+})
+
+store.on('error',function(e){
+  console.log('Session store error',e)
+})
+
+const sessionConfig={
+    store,
+    secret:process.env.SESSION_SECRET,
+    resave:false,
+    saveUninitialized:true,
+    cookie:{
+        expires:Date.now()+1000*60*60*24*7,
+        maxAge:1000*60*60*24*7
+    }
+}
+
 
 app.set('view engine', 'ejs') 
 app.engine('ejs',ejsMate)
@@ -41,15 +69,57 @@ app.set('views',path.join(__dirname,'views'))
 app.use(express.urlencoded({extended:true}))
 app.use(express.json());
 app.use(express.static(path.join(__dirname,'public')))
-app.use(session({
-    secret: process.env.SESSION_SECRET,
-    resave: false,
-    saveUninitialized: false
-  }))
+app.use(session(sessionConfig))
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(flash());
+app.use(mongoSanitize());
 
+app.use(helmet());
+
+
+const scriptSrcUrls = [
+    "https://stackpath.bootstrapcdn.com/",
+    "https://kit.fontawesome.com/",
+    "https://cdnjs.cloudflare.com/",
+    "https://fonts.googleapis.com/",
+    "https://fonts.gstatic.com/",
+    "https://cdn.jsdelivr.net",
+    "https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+];
+const styleSrcUrls = [
+    "https://kit-free.fontawesome.com/",
+    "https://stackpath.bootstrapcdn.com/",
+    "https://fonts.googleapis.com/",
+    "https://fonts.gstatic.com/",
+    "https://use.fontawesome.com/",
+    "https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+
+];
+
+const fontSrcUrls = [
+  "https://fonts.googleapis.com/",
+  "https://fonts.gstatic.com/",
+];
+app.use(
+    helmet.contentSecurityPolicy({
+        directives: {
+            defaultSrc: [],
+            connectSrc: ["'self'",],
+            scriptSrc: ["'unsafe-inline'", "'self'", ...scriptSrcUrls],
+            styleSrc: ["'self'", "'unsafe-inline'", ...styleSrcUrls],
+            workerSrc: ["'self'", "blob:"],
+            objectSrc: [],
+            imgSrc: [
+                "'self'",
+                "blob:",
+                "data:",
+                "*",
+            ],
+            fontSrc: ["'self'", ...fontSrcUrls],
+        },
+    })
+);
 
 
 passport.use(User.createStrategy());
@@ -214,7 +284,7 @@ app.post('/register', async (req, res) => {
 
     try {
         // Create a new user instance
-        const user = new User({ sanitizedName, dateOfBirth, sanitizedEmail });
+        const user = new User({ name:sanitizedName, dateOfBirth, email:sanitizedEmail });
 
         // Register the user with passport-local-mongoose
         const newUser = await User.register(user, password);
