@@ -19,7 +19,8 @@ const flash = require('connect-flash');
 const sanitizeHtml = require('sanitize-html');
 const mongoSanitize = require('express-mongo-sanitize');
 const helmet =require('helmet')
-
+const formData = require('form-data');
+const Mailgun = require('mailgun.js');
 const moment = require('moment-timezone')
 const workouts = require('./models/workouts')
 const favoriteExercises = require('./models/favoriteExercises')
@@ -82,24 +83,34 @@ const scriptSrcUrls = [
     "https://stackpath.bootstrapcdn.com/",
     "https://kit.fontawesome.com/",
     "https://cdnjs.cloudflare.com/",
-    "https://fonts.googleapis.com/",
-    "https://fonts.gstatic.com/",
-    "https://cdn.jsdelivr.net",
-    "https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+    "https://cdn.jsdelivr.net/",
+    "https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css",
+    "https://ka-f.fontawesome.com/" 
 ];
+
 const styleSrcUrls = [
-    "https://kit-free.fontawesome.com/",
+    "https://kit.fontawesome.com/",
+    "https://cdnjs.cloudflare.com/",
     "https://stackpath.bootstrapcdn.com/",
     "https://fonts.googleapis.com/",
     "https://fonts.gstatic.com/",
-    "https://use.fontawesome.com/",
-    "https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+    "https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css",
+    "https://ka-f.fontawesome.com/"  // Add this line
 
 ];
 
 const fontSrcUrls = [
-  "https://fonts.googleapis.com/",
-  "https://fonts.gstatic.com/",
+    "https://fonts.googleapis.com/",
+    "https://fonts.gstatic.com/",
+    "https://kit.fontawesome.com/",
+    "https://cdnjs.cloudflare.com/",
+    "https://ka-f.fontawesome.com/" 
+];
+
+const connectSrcUrls = [
+
+    "https://kit.fontawesome.com/",
+    "https://ka-f.fontawesome.com/"  // Add this line if needed
 ];
 app.use(
     helmet.contentSecurityPolicy({
@@ -116,6 +127,7 @@ app.use(
                 "data:",
                 "*",
             ],
+            connectSrc: ["'self'", ...connectSrcUrls],
             fontSrc: ["'self'", ...fontSrcUrls],
         },
     })
