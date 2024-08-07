@@ -78,7 +78,6 @@ app.use(mongoSanitize());
 
 app.use(helmet());
 
-
 const scriptSrcUrls = [
     "https://stackpath.bootstrapcdn.com/",
     "https://kit.fontawesome.com/",
@@ -206,6 +205,26 @@ app.get('/',(req,res,next)=>{
     }catch(e){
         next(e)
     }
+})
+app.get('/email',(req,res)=>{
+
+    const mailgun = new Mailgun(formData);
+    const mg = mailgun.client({
+        username: 'api', 
+        key: process.env.MAILGUN_API_KEY || 'key-yourkeyhere',
+        url:"https://api.mailgun.net/"
+        });
+    
+    mg.messages.create('sandbox-123.mailgun.org', {
+        from: "Workout Wave <mailgun@sandbox2685f3d26049452fa7459b9338a3a5c3.mailgun.org>",
+        to: ["saintsring2017@yahoo.com"],
+        subject: "Hello",
+        text: "Testing some Mailgun awesomeness!",
+        html: "<h1>Testing some Mailgun awesomeness!</h1>"
+    })
+    .then(msg => console.log(msg)) // logs response data
+    .catch(err => console.log(err)); // logs any error
+  res.send('test test test')
 })
 
 app.get('/exercise/:bodyPart',async(req,res,next)=>{
@@ -692,7 +711,7 @@ const filteredWorkouts = user.workouts.filter(workout => {
     return workoutDate >= startOfWeekAdjusted && workoutDate < new Date(startOfWeekAdjusted.getTime() + 7 * 24 * 60 * 60 * 1000);
 });
 
-// console.log('Filtered workouts:', filteredWorkouts);
+console.log('Filtered workouts:', filteredWorkouts);
 
 // Aggregate workouts by day of the week
 const workoutsByDay = filteredWorkouts.reduce((acc, workout) => {
@@ -704,7 +723,7 @@ const workoutsByDay = filteredWorkouts.reduce((acc, workout) => {
     return acc;
 }, {});
 
-// console.log('Workouts by day:', workoutsByDay);
+console.log('Workouts by day:', workoutsByDay);
 
 const data = Array(7).fill(0);
 
@@ -726,7 +745,10 @@ for (let i = 0; i < 7; i++) {
 // }
 
   
-//   console.log(data)
+  console.log(data)
+
+  console.log('Server Time:', new Date());
+console.log('Server Time Zone:', Intl.DateTimeFormat().resolvedOptions().timeZone);
 
   
     let minsOfCardio=0
@@ -793,6 +815,11 @@ app.post('/workout',isAuthenticated,async(req,res,next)=>{
     const {date,exercise,sets,reps,weight,duration,distance}=req.body
     const results=await Exercise.findOne({name:exercise})
     console.log(req.body)
+    
+    const localDate = moment(date, 'YYYY-MM-DD');
+
+    // Convert the date to UTC
+    const utcDate = localDate.utc().toISOString();
 
 
 try{
