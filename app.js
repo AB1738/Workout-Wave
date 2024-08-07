@@ -819,7 +819,7 @@ app.post('/workout',isAuthenticated,async(req,res,next)=>{
 
     // Convert the date to UTC
     const utcDate = localDate.utc().toISOString();
-    utcDate.setHours(0, 0, 0, 0);
+    // utcDate.setHours(0, 0, 0, 0);
 
 
 try{
@@ -832,7 +832,7 @@ try{
 
             }
             else{
-                const workout=new Workout({date:utcDate,exercise:exercise,sets:sets,reps: reps.map(Number),weight:weight,duration:duration,distance:distance})
+                const workout=new Workout({date:date,exercise:exercise,sets:sets,reps: reps.map(Number),weight:weight,duration:duration,distance:distance})
                 const user=await User.findById(req.user.id)
                 await workout.save()
             
@@ -845,7 +845,7 @@ try{
             }
         }
         if(results.bodyPart!=='cardio'){
-            const workout=new Workout({date:utcDate,exercise:exercise,sets:sets,reps: reps.map(Number),weight:weight,duration:duration})
+            const workout=new Workout({date:date,exercise:exercise,sets:sets,reps: reps.map(Number),weight:weight,duration:duration})
             const user=await User.findById(req.user.id)
             await workout.save()
         
