@@ -108,17 +108,11 @@
                 const ctx = document.getElementById('myChart');
                 const workoutData = <%- JSON.stringify(data) %>;
     
-                const localWorkoutData = workoutData.map((workout, index) => {
-        const date = moment.utc().startOf('week').add(index, 'days').local().format('dddd');
-        return {
-            day: date,
-            count: workout
-        };
-    });
+                const dayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 
-    // Prepare data for Chart.js
-    const labels = localWorkoutData.map(workout => workout.day);
-    const dataPoints = localWorkoutData.map(workout => workout.count);
+// Prepare data for Chart.js
+const labels = dayNames; // Use predefined day names
+const dataPoints = workoutData;
 
                 
                 new Chart(ctx, {

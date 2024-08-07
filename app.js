@@ -713,9 +713,8 @@ const filteredWorkouts = user.workouts.filter(workout => {
 
 console.log('Filtered workouts:', filteredWorkouts);
 
-// Aggregate workouts by day of the week
 const workoutsByDay = filteredWorkouts.reduce((acc, workout) => {
-    const dayOfWeek = new Date(workout.date).getDay(); // 0 (Sunday) to 6 (Saturday)
+    const dayOfWeek = new Date(workout.date).getUTCDay(); // 0 (Sunday) to 6 (Saturday)
     if (!acc[dayOfWeek]) {
         acc[dayOfWeek] = 0;
     }
@@ -725,12 +724,12 @@ const workoutsByDay = filteredWorkouts.reduce((acc, workout) => {
 
 console.log('Workouts by day:', workoutsByDay);
 
+// Create an array with data for each day of the week starting from Sunday
 const data = Array(7).fill(0);
 
 // Adjust so that Sunday is the first day in the array
 for (let i = 0; i < 7; i++) {
-    const index = (i + 6) % 7;
-    data[i] = workoutsByDay[index] || 0;
+    data[i] = workoutsByDay[i] || 0; // Use dayOfWeek directly as index
 }
 
 // console.log('Data for chart:', data);
@@ -820,6 +819,7 @@ app.post('/workout',isAuthenticated,async(req,res,next)=>{
 
     // Convert the date to UTC
     const utcDate = localDate.utc().toISOString();
+    utcDate.setHours(0, 0, 0, 0);
 
 
 try{
@@ -832,7 +832,7 @@ try{
 
             }
             else{
-                const workout=new Workout({date:date,exercise:exercise,sets:sets,reps: reps.map(Number),weight:weight,duration:duration,distance:distance})
+                const workout=new Workout({date:utcDate,exercise:exercise,sets:sets,reps: reps.map(Number),weight:weight,duration:duration,distance:distance})
                 const user=await User.findById(req.user.id)
                 await workout.save()
             
@@ -845,7 +845,7 @@ try{
             }
         }
         if(results.bodyPart!=='cardio'){
-            const workout=new Workout({date:date,exercise:exercise,sets:sets,reps: reps.map(Number),weight:weight,duration:duration})
+            const workout=new Workout({date:utcDate,exercise:exercise,sets:sets,reps: reps.map(Number),weight:weight,duration:duration})
             const user=await User.findById(req.user.id)
             await workout.save()
         
