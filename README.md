@@ -1,4 +1,4 @@
-# WorkoutWave - Fitness Tracker Web App
+<h1 align='center'>WorkoutWave - Fitness Tracker Web App</h1>
 
 **WorkoutWave** is a web app designed to help users view, log, and track their workouts. It allows users to explore different exercises, save their favorite workouts, log their progress, and even schedule workouts with the built-in calendar feature. Powered by the **Exercisedb API**, **Chart.js**, and built with **Node.js**, **Express**, and **EJS**, WorkoutWave is your fitness companion to help you stay on track with your fitness goals.
 
