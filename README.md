@@ -19,6 +19,7 @@
 - **Node.js** – JavaScript runtime for the backend.
 - **Express** – Web framework for building the server.
 - **EJS** – Templating engine for rendering dynamic HTML.
+- **Bootstrap** – Frontend framework (used specifically for the navbar).
 - **Chart.js** – JavaScript library for creating interactive charts to visualize progress.
 - **Exercisedb API** – Provides a large database of exercise routines and workout data.
 - **MongoDB** – For storing user accounts, workout logs, and favorites.
