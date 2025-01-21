@@ -46,8 +46,8 @@
 
 ## Demo
 
-Check out the live app here:  
-[WorkoutWave](https://workout-wave.onrender.com)
+Check out the live app here:  [WorkoutWave](https://workout-wave.onrender.com)\
+Please wait 30-60 seconds for the site to load.
 
 ---
 
